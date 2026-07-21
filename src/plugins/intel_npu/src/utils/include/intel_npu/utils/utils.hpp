@@ -6,6 +6,7 @@
 
 #include <iostream>
 
+#include "openvino/core/any.hpp"
 #include "openvino/runtime/allocator.hpp"
 
 namespace intel_npu {
@@ -46,6 +47,17 @@ static inline bool memory_and_size_aligned_to_standard_page_size(const void* add
 
 static inline size_t align_size_to_standard_page_size(size_t size) {
     return (size + utils::STANDARD_PAGE_SIZE - 1) & ~(utils::STANDARD_PAGE_SIZE - 1);
+}
+
+// Erases every property whose key contains "NPUW" from the map in place.
+static inline void drop_npuw_properties(ov::AnyMap& properties) {
+    for (auto it = properties.begin(); it != properties.end();) {
+        if (it->first.find("NPUW") != it->first.npos) {
+            it = properties.erase(it);
+        } else {
+            ++it;
+        }
+    }
 }
 
 }  // namespace utils

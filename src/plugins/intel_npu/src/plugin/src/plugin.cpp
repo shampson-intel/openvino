@@ -186,13 +186,7 @@ std::shared_ptr<ov::ICompiledModel> import_model_npuw(std::istream& stream,
     stream.seekg(stream_start_pos);
 
     // Drop NPUW properties if there are any
-    for (auto it = properties.begin(); it != properties.end(); ) {
-        if (it->first.find("NPUW") != it->first.npos) {
-            it = properties.erase(it);
-        } else {
-            ++it;
-        }
-    }
+    utils::drop_npuw_properties(properties);
     return nullptr;
 }
 
